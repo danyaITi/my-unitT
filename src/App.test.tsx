@@ -1,36 +1,42 @@
-import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { render, screen, fireEvent } from "@testing-library/react";
 
 import App from "./App";
 
 describe("App component", () => {
   it("renders learn react link", () => {
     render(<App />);
-    screen.debug();
+
     expect(screen.getByRole("list")).toBeInTheDocument();
     expect(screen.getByRole("textbox")).toBeInTheDocument();
   });
 
-  it("typing in searchbow works", () => {
+  it("typing in searchbox works", async () => {
     render(<App />);
-
     expect(screen.queryByDisplayValue("React")).toBeNull();
 
-    userEvent.type(screen.getByRole("textbox"), "React");
+    fireEvent.change(screen.getByRole("textbox"), {
+      target: { value: "React" },
+    });
 
-    expect(screen.queryByDisplayValue(/react/i)).toBeInTheDocument();
+    await screen.findByDisplayValue(/react/i);
+
+    expect(screen.getByDisplayValue(/react/i)).toBeInTheDocument();
   });
 
-  it("search's filtering is works", () => {
+  it("search's filtering is works", async () => {
     render(<App />);
 
     expect(screen.getByText("React")).toBeInTheDocument();
     expect(screen.getByText("Angular")).toBeInTheDocument();
 
-    userEvent.type(screen.getByRole("textbox"), "react");
+    fireEvent.change(screen.getByRole("textbox"), {
+      target: { value: "React" },
+    });
 
-    expect(screen.queryByDisplayValue("Angular")).toBeNull();
-    expect(screen.queryByText("React")).toBeInTheDocument();
+    await screen.findByText(/React/i);
+
+    expect(screen.queryByText("Angular")).toBeNull();
+    expect(screen.getByText(/React/i)).toBeInTheDocument();
   });
 
   it("search snapshot", () => {
