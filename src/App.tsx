@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import "./App.css";
-import Search from "./components/Search/Search";
-import List from "./components/List/List";
+import Search from "./components/search/Search";
+import List from "./components/list/List";
+import Users from "./components/users/Users";
 
 const data = ["React", "Angular", "Vue", "JavaScript"];
 
@@ -20,6 +21,7 @@ const App = () => {
       <div className="App-header ">
         <Search value={value} onChange={(e) => setValue(e.target.value)} />
         <List data={items} />
+        <Users />
       </div>
     </div>
   );

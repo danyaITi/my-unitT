@@ -42,6 +42,12 @@ Object {
               </li>
             </ul>
           </div>
+          <div>
+            <h1>
+              Users
+            </h1>
+            0
+          </div>
         </div>
       </div>
     </div>
@@ -83,6 +89,12 @@ Object {
               JavaScript
             </li>
           </ul>
+        </div>
+        <div>
+          <h1>
+            Users
+          </h1>
+          0
         </div>
       </div>
     </div>
