@@ -3,6 +3,7 @@ import { BrowserRouter } from "react-router-dom";
 import userEvent from "@testing-library/user-event";
 
 import App from "./App";
+import { act } from "react-dom/test-utils";
 
 const renderWithRouter = (ui: JSX.Element, { route = "/" } = {}) => {
   window.history.pushState({}, "Test page", route);
@@ -42,7 +43,9 @@ describe("App component", () => {
 
     expect(screen.getByText(/You are home page/i)).toBeInTheDocument();
 
-    await user.click(screen.getByText(/about/i));
+    act(() => {
+      user.click(screen.getByText(/about/i));
+    });
 
     expect(screen.getByText(/You are about page/i)).toBeInTheDocument();
   });
