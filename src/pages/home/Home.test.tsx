@@ -117,12 +117,25 @@ describe("events", () => {
 
     expect(screen.getByRole("listbox")).toBeInTheDocument();
 
+    // click B
     userEvent.selectOptions(screen.getByRole("listbox"), "2");
-    expect(screen.getByText("B").selected).toBeTruthy();
+    const optionFirst = screen.getByRole("option", {
+      name: "B",
+    }) as HTMLOptionElement;
+    expect(optionFirst.selected).toBeTruthy();
 
+    // click A and deselect B
     userEvent.selectOptions(screen.getByRole("listbox"), "1");
     userEvent.deselectOptions(screen.getByRole("listbox"), "2");
-    expect(screen.getByText("A").selected).toBeTruthy();
-    expect(screen.getByText("B").selected).toBeFalsy();
+
+    const optionSecond = screen.getByRole("option", {
+      name: "A",
+    }) as HTMLOptionElement;
+    expect(optionSecond.selected).toBeTruthy();
+
+    const optionThird = screen.getByRole("option", {
+      name: "B",
+    }) as HTMLOptionElement;
+    expect(optionThird.selected).toBeFalsy();
   });
 });
