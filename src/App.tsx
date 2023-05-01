@@ -1,27 +1,25 @@
-import { useState, useEffect } from "react";
 import "./App.css";
-import Search from "./components/search/Search";
-import List from "./components/list/List";
-import Users from "./components/users/Users";
-
-const data = ["React", "Angular", "Vue", "JavaScript"];
+import { Link, Route, Routes } from "react-router-dom";
+import Home from "./pages/home/Home";
+import About from "./pages/About";
+import NoMatch from "./pages/NoMatch";
 
 const App = () => {
-  const [value, setValue] = useState("");
-  const [items, setItems] = useState(data);
-
-  useEffect(() => {
-    setItems(
-      data.filter((el) => el.toLowerCase().includes(value.toLocaleLowerCase()))
-    );
-  }, [value]);
-
   return (
     <div className="App">
       <div className="App-header ">
-        <Search value={value} onChange={(e) => setValue(e.target.value)} />
-        <List data={items} />
-        <Users />
+        <nav style={{ gap: "1rem", display: "flex", marginBottom: "1rem" }}>
+          <Link to="/">Contant</Link>
+
+          <Link to="/about">About</Link>
+        </nav>
+        <Routes>
+          <Route path="/" element={<Home />} />
+
+          <Route path="/about" element={<About />} />
+
+          <Route path="*" element={<NoMatch />} />
+        </Routes>
       </div>
     </div>
   );
