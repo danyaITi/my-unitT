@@ -29,6 +29,6 @@ describe("Users component", () => {
     render(<Users />);
 
     expect(await screen.findByText(/wrong/i)).toBeInTheDocument();
-    expect(screen.queryByRole("listbox")).toBeNull();
+    expect(screen.queryByRole("list")).toBeNull();
   });
 });
