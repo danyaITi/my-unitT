@@ -1,4 +1,5 @@
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { AxiosError } from "axios";
 
 export interface Todo {
   id: number;
@@ -6,12 +7,32 @@ export interface Todo {
   completed: boolean;
 }
 
-interface TodoState {
+export interface TodoState {
   items: Todo[];
+  status: null | string;
+  error?: null | string;
 }
+
+export const fetchTodos = createAsyncThunk("todos/fetchTodos", async () => {
+  try {
+    const response = await fetch(
+      "https://jsonplaceholder.typicode.com/todos?_limit=10"
+    );
+    const data = await response.json();
+
+    return data;
+  } catch (error) {
+    let err = error as AxiosError;
+    if (!err.response) {
+      throw new Error("Went wrong of fetching data");
+    }
+  }
+});
 
 export const initialState: TodoState = {
   items: [],
+  status: null,
+  error: null,
 };
 
 export const todoSlice = createSlice({
@@ -35,6 +56,20 @@ export const todoSlice = createSlice({
       );
       state.items = filteredTodos;
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(fetchTodos.pending, (state) => {
+      state.status = "pending";
+      state.error = null;
+    }),
+      builder.addCase(fetchTodos.fulfilled, (state, action) => {
+        state.items = action.payload;
+        state.status = "fulfilled";
+      }),
+      builder.addCase(fetchTodos.rejected, (state, action) => {
+        state.error = action.error.message;
+        state.status = "rejected";
+      });
   },
 });
 
