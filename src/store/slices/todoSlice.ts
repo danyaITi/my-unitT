@@ -13,21 +13,26 @@ export interface TodoState {
   error?: null | string;
 }
 
-export const fetchTodos = createAsyncThunk("todos/fetchTodos", async () => {
-  try {
-    const response = await fetch(
-      "https://jsonplaceholder.typicode.com/todos?_limit=10"
-    );
-    const data = await response.json();
+export const fetchTodos = createAsyncThunk(
+  "todos/fetchTodos",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await fetch(
+        "https://jsonplaceholder.typicode.com/todos?_limit=10"
+      );
 
-    return data;
-  } catch (error) {
-    let err = error as AxiosError;
-    if (!err.response) {
-      throw new Error("Went wrong of fetching data");
+      if (!response.ok) {
+        throw new Error("Went wrong of fetching data");
+      }
+      const data = await response.json();
+
+      return data;
+    } catch (error) {
+      const err = error as Error;
+      return rejectWithValue(err.message);
     }
   }
-});
+);
 
 export const initialState: TodoState = {
   items: [],
@@ -67,7 +72,7 @@ export const todoSlice = createSlice({
         state.status = "fulfilled";
       }),
       builder.addCase(fetchTodos.rejected, (state, action) => {
-        state.error = action.error.message;
+        state.error = action.payload as string;
         state.status = "rejected";
       });
   },

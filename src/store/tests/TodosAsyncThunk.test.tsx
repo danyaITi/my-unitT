@@ -41,14 +41,15 @@ describe("todos async thunk", () => {
       ) as jest.MockedFunction<any>
     );
 
-    const thunk = fetchTodos();
-    await thunk(dispatch, () => {}, null);
+    await fetchTodos()(dispatch, () => {}, null);
 
     const { calls } = dispatch.mock;
+
     const [first, second] = calls;
 
     expect(first[0].type).toBe(fetchTodos.pending.type);
     expect(second[0].type).toBe(fetchTodos.rejected.type);
-    expect(second[0].error.message).toBe("Went wrong of fetching data");
+    expect(second[0].meta.rejectedWithValue).toBeTruthy();
+    expect(second[0].payload).toBe("Went wrong of fetching data");
   });
 });
